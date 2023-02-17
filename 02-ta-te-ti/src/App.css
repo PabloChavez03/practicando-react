@@ -1,0 +1,95 @@
+.board {
+  width: fit-content;
+  text-align: center;
+  margin: 40px auto;
+}
+
+.board h1 {
+  margin-bottom: 1rem;
+}
+
+
+.winner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  place-content: center;
+  gap: 2.5rem;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.winner .square {
+  background-color: #66AAFF99;
+}
+
+.winner-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+
+.winner-footer button{
+  background-color: transparent;
+  padding: 1rem 1.5rem;
+  border: 2px solid #bbb;
+  border-radius: .5rem;
+  cursor: pointer;
+}
+
+.winner-footer button:hover {
+  background-color: #444;
+  transition: .3s ease background-color;
+}
+
+.square {
+  display: grid;
+  place-items: center;
+  width: 100px;
+  height: 100px;
+  border: 2px solid #eee;
+  font-size: 50px;
+  cursor: pointer;
+  border-radius: 5%;
+}
+
+
+.turn {
+  display: flex;
+  justify-content:  center;
+  margin: 20px auto;
+  width: fit-content;
+}
+
+.turn .square {
+  border: none;
+}
+
+.square.is-selected {
+  color: #fff;
+  background-color: #66AAFF99;
+}
+
+.board .game {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.board .reset {
+  background-color: transparent;
+  padding: 1rem 1.5rem;
+  border: 2px solid #eee;
+  border-radius: .5rem;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+}
+
+.board .reset:hover {
+  background-color: #444;
+  transition: .3s ease background-color;
+}
