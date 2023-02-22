@@ -1,8 +1,8 @@
 // symbols windows
 export const TURNS = {
-  X: "✖",
-  O: "○",
-};
+  X: '✖',
+  O: '○'
+}
 
 export const WINNER_COMBOS = [
   [0, 1, 2],
@@ -12,9 +12,9 @@ export const WINNER_COMBOS = [
   [1, 4, 7],
   [2, 5, 8],
   [0, 4, 8],
-  [2, 4, 6],
-];
+  [2, 4, 6]
+]
 
-export const initialBoard = Array(9).fill(null);
-export const initialTurn = TURNS.X;
-export const initialWinner = null;
+export const initialBoard = Array(9).fill(null)
+export const initialTurn = TURNS.X
+export const initialWinner = null
