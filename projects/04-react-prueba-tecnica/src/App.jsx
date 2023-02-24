@@ -1,29 +1,12 @@
-import { useState, useEffect } from 'react'
-import { IMAGE_PREFIX_CAT_URL } from './constants'
-import { getRandomFact } from './services/facts'
+import { useCatFact } from './hooks/useCatFact'
+import { useCatImage } from './hooks/useCatImage'
 
 function App () {
-  const [fact, setFact] = useState('')
-  const [imageUrl, setImageUrl] = useState('')
-
-  useEffect(() => {
-    getRandomFact().then(setFact)
-  }, [])
-
-  useEffect(() => {
-    if (fact) {
-      const singleWord = fact.split(' ')[0]
-      fetch(`https://cataas.com/cat/says/${singleWord}?json=true`)
-        .then((res) => res.json())
-        .then((data) => {
-          const { url } = data
-          setImageUrl(url)
-        })
-    }
-  }, [fact])
+  const { fact, refreshFact } = useCatFact()
+  const { imageUrl } = useCatImage({ fact })
 
   function handleClick () {
-    getRandomFact().then(setFact)
+    return refreshFact()
   }
 
   return (
@@ -31,7 +14,7 @@ function App () {
       <h1>Cats Facts</h1>
       {imageUrl && (
         <img
-          src={`${IMAGE_PREFIX_CAT_URL}${imageUrl}`}
+          src={imageUrl}
           alt={`image extracted with first word of ${fact}`}
         />
       )}

@@ -1,4 +1,4 @@
-import { API_FACT_RANDOM } from '../constants'
+import { API_FACT_RANDOM } from '../constants/index.cjs'
 
 export function getRandomFact () {
   return (
