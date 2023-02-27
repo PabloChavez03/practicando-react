@@ -1,41 +1,49 @@
 import './App.css'
-import responseMovies from './mocks/with-results.json'
-// import withoutMovies from './mocks/no-results.json'
+import { useState, useCallback } from 'react'
+import Movies from './components/Movies'
+import { useMovies } from './hooks/useMovies'
+import { useSearch } from './hooks/useSearch'
+import debounce from 'just-debounce-it'
 
 function App () {
-  const movies = responseMovies.Search
-  const hasMovies = movies.length > 0
+  const [sort, setSort] = useState(false)
+  const { search, updateSearch, error } = useSearch()
+  const { movies, getMovies, loading } = useMovies({ search, sort })
+
+  const debounceGetMovie = useCallback(debounce(search => {
+    console.log('search', search)
+    getMovies({ search })
+  }, 300), [getMovies])
+
+  function handleChange (evt) {
+    const newSearch = evt.target.value
+    updateSearch(newSearch)
+    debounceGetMovie(newSearch)
+  }
+
+  function handleSort () {
+    setSort(!sort)
+  }
+
+  function handleSubmit (evt) {
+    evt.preventDefault()
+    getMovies({ search })
+  }
 
   return (
     <div className='page'>
       <header>
         <h1>Buscador de películas</h1>
-        <form className='form'>
-          <input type='text' placeholder='Avenger, Matrix, Cars...' />
+        <form className='form' onSubmit={handleSubmit}>
+          <input value={search} type='text' placeholder='Avenger, Matrix, Cars...' onChange={handleChange} style={{ border: '1px solid transparent', borderColor: error ? 'red' : 'transparent' }} />
+          <input type='checkbox' onChange={handleSort} checked={sort} />
           <button type='submit'>Buscar</button>
         </form>
+        {error && <p style={{ color: 'red', fontSize: 13 }}>{error}</p>}
       </header>
 
       <main>
-        {
-          hasMovies
-            ? (
-              <ul>
-                {
-                movies.map((movie) => (
-                  <li key={movie.imdbID}>
-                    <h2>{movie.Title}</h2>
-                    <img src={movie.Poster} alt={`Poster by movie ${movie.Title}`} />
-                    <span>{movie.Year}</span>
-                  </li>
-                ))
-              }
-              </ul>
-              )
-            : (
-              <p>No se encontraron resultados para está pelicula</p>
-              )
-        }
+        {loading ? <p>Cargando...</p> : <Movies movies={movies} />}
       </main>
     </div>
   )

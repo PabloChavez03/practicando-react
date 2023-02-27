@@ -1,8 +1,30 @@
 .page {
   display: grid;
   place-items: center;
+  width: 100%;
 }
 
 .form {
   display: flex;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.movies {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 32px;
+  list-style: none;
+}
+
+.movie {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
