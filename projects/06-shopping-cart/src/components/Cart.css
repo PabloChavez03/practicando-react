@@ -1,0 +1,37 @@
+.cart-button {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #77aaee;
+  padding: 10px;
+  border-radius: 100%;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+.cart {
+  display: none;
+  background-color: #111111;
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 32px;
+  width: 250px;
+  height: 100vh;
+  z-index: 1000;
+}
+
+.cart ul {
+  margin: 2rem 0;
+}
+
+.cart li{
+  display: flex;
+  flex-direction: column;
+}
+
+
+.cart-button ~ input:checked ~ .cart {
+  display: block;
+}
