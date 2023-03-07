@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { EVENTS } from '../constants'
+import { getCurrentPath } from '../utils'
 
 export function useLocation () {
-  const [currentLocation, setCurrentLocation] = useState(window.location.pathname)
+  const [currentLocation, setCurrentLocation] = useState(getCurrentPath())
 
   useEffect(() => {
     const onLocationChange = () => {
-      setCurrentLocation(window.location.pathname)
+      setCurrentLocation(getCurrentPath())
     }
 
     window.addEventListener(EVENTS.PUSHSTATE, onLocationChange)
@@ -15,7 +16,6 @@ export function useLocation () {
     return () => {
       window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange)
       window.removeEventListener(EVENTS.POPSTATE, onLocationChange)
-      console.log('remove event')
     }
   }, [])
 

@@ -5,7 +5,7 @@ export default function HomePage () {
     <>
       <h1>Home</h1>
       <p>Como hacer un React Router desde Cero</p>
-      <Link to='/about'>Ir a Home</Link>
+      <Link to='/about'>Ir a About</Link>
     </>
   )
 }

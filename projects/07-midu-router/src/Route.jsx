@@ -1,11 +1,5 @@
-import { useLocation } from './hooks/useLocation'
-
-function Route ({ element, path, ...props }) {
-  const { currentLocation } = useLocation()
-
-  if (currentLocation === path) {
-    return element
-  }
+function Route ({ Element, path, ...props }) {
+  return null
 }
 
 export default Route
