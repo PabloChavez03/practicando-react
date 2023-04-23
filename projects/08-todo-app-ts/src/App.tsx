@@ -52,6 +52,10 @@ const App = (): JSX.Element => {
     setTodos([...todos, newTodo])
   }
 
+  const handleEditTodo = ({ id, title }: Pick<TodoType, 'id' | 'title'>): void => {
+
+  }
+
   const activeCount = todos.filter((todo) => !todo.completed).length
   const completedCount = todos.length - activeCount
 
