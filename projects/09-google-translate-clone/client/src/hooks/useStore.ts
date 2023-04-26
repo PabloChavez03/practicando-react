@@ -16,10 +16,15 @@ export function reducer (state: State, action: Action) {
   if (type === 'INTERCHANGE_LANGUAGES') {
     if (state.fromLanguage === AUTO_LANGUAGE) return state
 
+    const loading = state.fromText !== ''
+
     return {
       ...state,
       fromLanguage: state.toLanguage,
-      toLanguage: state.fromLanguage
+      toLanguage: state.fromLanguage,
+      fromText: state.result,
+      loading,
+      result: ''
     }
   }
 
@@ -38,9 +43,10 @@ export function reducer (state: State, action: Action) {
   }
 
   if (type === 'SET_FROM_TEXT') {
+    const loading = action.payload !== ''
     return {
       ...state,
-      loading: true,
+      loading,
       fromText: action.payload,
       result: ''
     }

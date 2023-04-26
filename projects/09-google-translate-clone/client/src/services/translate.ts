@@ -1,3 +1,37 @@
-import { Configuration, OpenAiApi } from 'openai'
+import { type FromLanguage, type Language } from '../types/types'
 
-const apiKey = import.meta.env.VITE_OPENAI_API_KEY
+interface Translate {
+  fromLanguage: FromLanguage
+  toLanguage: Language
+  fromText: string
+}
+
+export async function translate ({ fromLanguage, toLanguage, fromText }: Translate) {
+  if (fromText === '') return
+
+  if (fromLanguage === toLanguage) {
+    return fromText
+  }
+
+  if (fromLanguage === 'auto') {
+    const auto = await fetch('http://localhost:3001/translator/auto', {
+      method: 'POST',
+      body: JSON.stringify({ fromLanguage, toLanguage, fromText }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(async res => await res.json())
+
+    return auto
+  }
+
+  const translated = await fetch('http://localhost:3001/translator/translate', {
+    method: 'POST',
+    body: JSON.stringify({ fromLanguage, toLanguage, fromText }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(async res => await res.json())
+
+  return translated
+}

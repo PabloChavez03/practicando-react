@@ -7,6 +7,9 @@ import { AUTO_LANGUAGE } from './constants'
 import LanguageSelector from './components/LanguageSelector'
 import { SectionType } from './types/enum'
 import TextArea from './components/TextArea'
+import { useEffect } from 'react'
+import { useDebounce } from './hooks/useDebounce'
+import { translate } from './services/translate'
 
 function App () {
   const {
@@ -21,6 +24,18 @@ function App () {
     setFromText,
     setResult
   } = useStore()
+
+  const debouncedFromText = useDebounce(fromText, 500)
+
+  useEffect(() => {
+    translate({ fromLanguage, toLanguage, fromText: debouncedFromText })
+      .then(result => {
+        if (result == null) return
+        setResult(result)
+      })
+      .catch(console.error)
+  }, [debouncedFromText, fromLanguage, toLanguage])
+
   return (
     <Container fluid>
       <h2>Google Translate</h2>
