@@ -29,16 +29,24 @@ export function reducer (state: State, action: Action) {
   }
 
   if (type === 'SET_FROM_LANGUAGE') {
+    const loading = state.fromText !== ''
+
     return {
       ...state,
-      fromLanguage: action.payload
+      fromLanguage: action.payload,
+      result: '',
+      loading
     }
   }
 
   if (type === 'SET_TO_LANGUAGE') {
+    const loading = state.fromText !== ''
+
     return {
       ...state,
-      toLanguage: action.payload
+      toLanguage: action.payload,
+      result: '',
+      loading
     }
   }
 
