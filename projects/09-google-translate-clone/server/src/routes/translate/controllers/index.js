@@ -9,10 +9,12 @@ module.exports = {
       const result = await TranslateService.detectLanguage({ fromLanguage, toLanguage, fromText })
 
       if (!result) {
+        console.log(result)
         const httpError = createHttpError('Error in detect language')
         next(httpError)
       }
 
+      console.log(result)
       return res.status(200).json(result)
     } catch (error) {
       return res.status(500)

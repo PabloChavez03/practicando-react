@@ -25,8 +25,6 @@ function App () {
     setResult
   } = useStore()
 
-  const app = "app"
-
   const debouncedFromText = useDebounce(fromText, 500)
 
   useEffect(() => {
@@ -39,20 +37,20 @@ function App () {
   }, [debouncedFromText, fromLanguage, toLanguage])
 
   const handleClipboard = () => {
-    navigator.clipboard.writeText(result)
+    navigator.clipboard.writeText(result).catch(() => {})
   }
 
-  // const handleSpeak = () => {
-  //   console.log(result)
-  //   const utterance = new SpeechSynthesisUtterance(result)
-  //   utterance.lang = 'es-MX'
-  //   utterance.rate = 0.75
-  //   speechSynthesis.speak(utterance)
-  // }
+  const handleSpeak = () => {
+    console.log(result)
+    const utterance = new SpeechSynthesisUtterance(result)
+    utterance.lang = VOICE_FOR_LANGUAGES[toLanguage]
+    utterance.rate = 0.80
+    speechSynthesis.speak(utterance)
+  }
 
   return (
     <Container fluid>
-      <h2>Google Translate</h2>
+      <Row><h2>Google Translate</h2></Row>
       <Row>
         <Col>
           <Stack gap={2}>
@@ -96,21 +94,21 @@ function App () {
                 loading={loading}
               />
               <div style={{ position: 'absolute', left: 0, bottom: 0, display: 'flex' }}>
-              <Button
-                style={{ opacity: .7 }}
-                variant='link'
-                onClick={handleClipboard}
+                <Button
+                  style={{ opacity: 0.7 }}
+                  variant='link'
+                  onClick={handleClipboard}
                 >
                   <ClipboardIcon />
-              </Button>
-{/* 
-              <Button
-                style={{ opacity: .7 }}
-                variant='link'
-                onClick={handleSpeak}
+                </Button>
+
+                <Button
+                  style={{ opacity: 0.7 }}
+                  variant='link'
+                  onClick={handleSpeak}
                 >
                   <SpeakerIcon />
-              </Button> */}
+                </Button>
               </div>
             </div>
           </Stack>

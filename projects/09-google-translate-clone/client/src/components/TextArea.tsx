@@ -8,7 +8,7 @@ interface Props {
   value: string
 }
 
-const commonStyles = { border: 0, height: '200px', width: '300px' }
+const commonStyles = { border: 0, height: '200px', width: '300px', resize: 'none' }
 
 const getPlaceholder = ({ type, loading }: { type: SectionType, loading?: boolean }) => {
   if (type === SectionType.From) return 'Introducir texto'
