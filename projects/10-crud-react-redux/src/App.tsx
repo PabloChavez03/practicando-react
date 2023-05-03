@@ -1,7 +1,12 @@
-import "./App.css";
+import './App.css'
+import ListOfUsers from './components/ListOfUsers'
 
-function App() {
-	return <h1>Redux</h1>;
+function App () {
+  return (
+    <>
+      <ListOfUsers />
+    </>
+  )
 }
 
-export default App;
+export default App
