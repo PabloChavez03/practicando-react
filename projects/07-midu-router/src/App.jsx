@@ -1,9 +1,9 @@
 import { lazy, Suspense } from 'react'
 import './App.css'
-import Router from './Router'
+import Loading from './Loading'
 import Page404 from './pages/404'
 import Route from './Route'
-import Loading from './Loading'
+import Router from './Router'
 
 const LazyHomePage = lazy(() => import('./pages/HomePage'))
 const LazyAboutPage = lazy(() => import('./pages/About'))

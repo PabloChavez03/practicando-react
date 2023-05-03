@@ -1,15 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
-import './App.css'
-import { Container, Row, Col, Button, Stack } from 'react-bootstrap'
-import { useStore } from './hooks/useStore'
-import { ArrowsIcon, ClipboardIcon, SpeakerIcon } from './components/Icons'
-import { AUTO_LANGUAGE, VOICE_FOR_LANGUAGES } from './constants'
-import LanguageSelector from './components/LanguageSelector'
-import { SectionType } from './types/enum'
-import TextArea from './components/TextArea'
 import { useEffect } from 'react'
+import { Button, Col, Container, Row, Stack } from 'react-bootstrap'
+import './App.css'
+import { ArrowsIcon, ClipboardIcon, SpeakerIcon } from './components/Icons'
+import LanguageSelector from './components/LanguageSelector'
+import TextArea from './components/TextArea'
+import { AUTO_LANGUAGE, VOICE_FOR_LANGUAGES } from './constants'
 import { useDebounce } from './hooks/useDebounce'
+import { useStore } from './hooks/useStore'
 import { translate } from './services/translate'
+import { SectionType } from './types/enum'
 
 function App () {
   const {
