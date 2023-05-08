@@ -1,60 +1,75 @@
-import { useEffect, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import './App.css'
 import { UsersList } from './components/UsersList'
-import { type User } from './types'
+import { useUsers } from './hooks/useUsers'
+import { SortBy, type User } from './types/types.d'
 
 function App () {
-  const [users, setUsers] = useState<User[]>([])
+  const { users, originalUsers, setUsers } = useUsers()
   const [showColors, setShowColors] = useState(false)
-  const [showSorted, setShowSorted] = useState(false)
-
-  const originalUsers = useRef<User[]>([])
+  const [sorting, setSorting] = useState<SortBy>(SortBy.NONE)
+  const [filterValue, setFilterValue] = useState<string | null>(null)
 
   const toggleColors = () => {
     setShowColors(!showColors)
   }
 
   const toggleSorted = () => {
-    setShowSorted(!showSorted)
+    const newSortingValue = sorting === SortBy.NONE ? SortBy.COUNTRY : SortBy.NONE
+    setSorting(newSortingValue)
   }
 
   const handleReset = () => {
     setUsers(originalUsers.current)
   }
 
-  const sortedUsers = showSorted
-    ? users.toSorted((a, b) => a.location.country.localeCompare(b.location.country))
-    : users
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterValue(event.target.value)
+  }
+
+  const filteredUsers = useMemo(() => {
+    return typeof filterValue === 'string' && filterValue.length !== 0
+      ? users.filter((user) => user.location.country.toLowerCase().includes(filterValue.toLowerCase()))
+      : users
+  }, [users, filterValue])
+
+  const sortedUsers = useMemo(() => {
+    if (sorting === SortBy.NONE) return filteredUsers
+
+    // extensive option
+    const extensiveSorting: Record<string, (user: User) => any> = {
+      [SortBy.COUNTRY]: user => user.location.country,
+      [SortBy.NAME]: user => user.name.first,
+      [SortBy.LAST]: user => user.name.last
+    }
+
+    return filteredUsers.toSorted((a, b) => {
+      const extractByExtensiveSorting = extensiveSorting[sorting]
+      return extractByExtensiveSorting(a).localeCompare(extractByExtensiveSorting(b))
+    })
+  }, [sorting, filteredUsers])
 
   const handleDelete = (email: string) => {
     const filteredUsers = sortedUsers.filter((user) => user.email !== email)
     setUsers(filteredUsers)
   }
 
-  useEffect(() => {
-    fetch('https://randomuser.me/api?results=100')
-      .then((res) => {
-        return res.json()
-      })
-      .then((json) => {
-        setUsers(json.results)
-        originalUsers.current = json.results
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }, [])
+  const handleChangeSort = (sort: SortBy) => {
+    setSorting(sort)
+  }
+
   return (
     <>
       <header>
         <button onClick={toggleColors}>Colorear filas</button>
         <button onClick={toggleSorted}>
-          {showSorted ? 'Cancelar filtro' : 'Ordenar por país'}
+          {sorting === SortBy.COUNTRY ? 'Cancelar filtro' : 'Ordenar por país'}
         </button>
         <button onClick={handleReset}>Reset users</button>
+        <input type='text' placeholder='Filtrar por país' onChange={handleChange} />
       </header>
       <main>
-        <UsersList deleteUser={handleDelete} showColors={showColors} users={sortedUsers} />
+        <UsersList changeSort={handleChangeSort} deleteUser={handleDelete} showColors={showColors} users={sortedUsers} />
       </main>
     </>
   )
