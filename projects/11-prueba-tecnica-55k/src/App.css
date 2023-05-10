@@ -5,3 +5,15 @@
   text-align: center;
   width: 100%;
 }
+
+header {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+header input {
+  border-radius: 5px;
+}
