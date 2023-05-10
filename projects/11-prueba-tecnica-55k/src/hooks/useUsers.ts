@@ -1,41 +1,53 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { type User } from '../types/types.d'
 
-export function useUsers () {
-  const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+import { useInfiniteQuery } from '@tanstack/react-query'
 
+const fetchUsers = ({ pageParam = 1 }: { pageParam?: number }) => {
+  // arreglar tanstack query, no funciona el data
+  return fetch(
+    `https://randomuser.me/api?results=10&seed=pablito&page=${pageParam}`
+  )
+    .then((res) => {
+      if (res.ok) {
+        return res.json()
+      }
+      throw new Error('Error fetching data')
+    })
+    .then((json) => {
+      const nextCursor = Number(json.info.page)
+
+      return {
+        users: json.results,
+        nextCursor
+      }
+    })
+    .catch(() => {
+      throw new Error('Error connecting to API')
+    })
+}
+
+export function useUsers () {
   const originalUsers = useRef<User[]>([])
 
-  useEffect(() => {
-    setLoading(true)
-    setError(false)
-    fetch('https://randomuser.me/api?results=10')
-      .then((res) => {
-        if (res.ok) {
-          return res.json()
-        }
-        setError(true)
-      })
-      .then((json) => {
-        setUsers(json.results)
-        originalUsers.current = json.results
-      })
-      .catch((err) => {
-        console.log(err)
-        setError(true)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }, [])
+  const { isLoading, isError, data, fetchNextPage, hasNextPage } =
+    useInfiniteQuery<{ users: User[], nextCursor: number }>(
+      ['users'],
+      fetchUsers,
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor
+      }
+    )
+
+  console.log(data)
 
   return {
     users,
     originalUsers,
-    setUsers,
-    loading,
-    error
+    loading: isLoading,
+    error: isError,
+    currentPage,
+    // setUsers,
+    setCurrentPage
   }
 }

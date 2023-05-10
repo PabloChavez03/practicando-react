@@ -5,7 +5,7 @@ import { useUsers } from './hooks/useUsers'
 import { SortBy, type User } from './types/types.d'
 
 function App () {
-  const { users, originalUsers, loading, error, setUsers } = useUsers()
+  const { users, loading, error, currentPage, setCurrentPage } = useUsers()
   const [showColors, setShowColors] = useState(false)
   const [sorting, setSorting] = useState<SortBy>(SortBy.NONE)
   const [filterValue, setFilterValue] = useState<string | null>(null)
@@ -20,7 +20,7 @@ function App () {
   }
 
   const handleReset = () => {
-    setUsers(originalUsers.current)
+    // setUsers(originalUsers.current)
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,8 +50,8 @@ function App () {
   }, [sorting, filteredUsers])
 
   const handleDelete = (email: string) => {
-    const filteredUsers = sortedUsers.filter((user) => user.email !== email)
-    setUsers(filteredUsers)
+    // const filteredUsers = sortedUsers.filter((user) => user.email !== email)
+    // setUsers(filteredUsers)
   }
 
   const handleChangeSort = (sort: SortBy) => {
@@ -69,13 +69,15 @@ function App () {
         <input type='text' placeholder='Filtrar por país' onChange={handleChange} />
       </header>
       <main>
+        {users.length > 0 && <UsersList changeSort={handleChangeSort} deleteUser={handleDelete} users={sortedUsers} showColors={showColors} />}
+
         {loading && <strong>Cargando...</strong>}
 
-        {!loading && error && <strong>Hubo un error</strong>}
+        {error && <strong>Hubo un error</strong>}
 
         {!loading && !error && users.length === 0 && <strong>No hay usuarios</strong>}
 
-        {!loading && !error && users.length > 0 && <UsersList changeSort={handleChangeSort} deleteUser={handleDelete} users={sortedUsers} showColors={showColors} />}
+        {!loading && !error && <button onClick={() => { setCurrentPage(currentPage + 1) }}>Cargar más usuarios</button>}
       </main>
     </>
   )
