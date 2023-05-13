@@ -1,11 +1,16 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import './App.css'
+import Results from './components/Results'
 import { UsersList } from './components/UsersList'
 import { useUsers } from './hooks/useUsers'
 import { SortBy, type User } from './types/types.d'
 
 function App () {
-  const { users, loading, error, currentPage, setCurrentPage } = useUsers()
+  const { users, loading, error, nextPage, hasNextPage, refetch } = useUsers()
+
+  const queryClient = useQueryClient()
+
   const [showColors, setShowColors] = useState(false)
   const [sorting, setSorting] = useState<SortBy>(SortBy.NONE)
   const [filterValue, setFilterValue] = useState<string | null>(null)
@@ -19,8 +24,8 @@ function App () {
     setSorting(newSortingValue)
   }
 
-  const handleReset = () => {
-    // setUsers(originalUsers.current)
+  const handleReset = async () => {
+    await refetch()
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,8 +55,23 @@ function App () {
   }, [sorting, filteredUsers])
 
   const handleDelete = (email: string) => {
-    // const filteredUsers = sortedUsers.filter((user) => user.email !== email)
-    // setUsers(filteredUsers)
+    queryClient.setQueryData(['users'], (prevData) => {
+      if (prevData) {
+        const updateData = prevData.pages.map((page) => {
+          return {
+            ...page,
+            users: page.users.filter(user => user.email !== email)
+          }
+        })
+
+        return {
+          pageParams: prevData.pageParams,
+          pages: updateData
+        }
+      }
+
+      return prevData
+    })
   }
 
   const handleChangeSort = (sort: SortBy) => {
@@ -60,6 +80,7 @@ function App () {
 
   return (
     <>
+      <Results />
       <header>
         <button onClick={toggleColors}>Colorear filas</button>
         <button onClick={toggleSorted}>
@@ -77,7 +98,9 @@ function App () {
 
         {!loading && !error && users.length === 0 && <strong>No hay usuarios</strong>}
 
-        {!loading && !error && <button onClick={() => { setCurrentPage(currentPage + 1) }}>Cargar más usuarios</button>}
+        {!loading && !error && hasNextPage === true && <button onClick={() => nextPage()}>Cargar más usuarios</button>}
+
+        {!loading && !error && hasNextPage === false && <strong>No hay más usuarios</strong>}
       </main>
     </>
   )
